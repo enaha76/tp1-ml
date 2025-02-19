@@ -1,0 +1,36 @@
+# docker-compose.yml
+
+version: '3.9'
+services:
+
+  jupyter_svc:
+    build: .
+    container_name: jupyter_container
+    command: >
+      jupyter lab
+      --ip=0.0.0.0
+      --port=8888
+      --no-browser
+      --allow-root
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  streamlit_svc:
+    build: .
+    container_name: streamlit_container
+    command: >
+      streamlit run app/streamlit_app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app/app
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
